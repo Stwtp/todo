@@ -6,13 +6,12 @@ class App extends Component {
   constructor(props) {
 
     super(props);
-    this.handleChange = this.handleChange.bind(this);
+    this.handleChangetext = this.handleChangetext.bind(this);
+    this.handleChangedescription = this.handleChangedescription.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleCheck = this.handleCheck.bind(this);
-    this.state = {items: JSON.parse(localStorage.getItem('todos')) || [], text: ''};
+    this.state = {items: JSON.parse(localStorage.getItem('todos')) || [], text: '', description: ''};
     this.total = this.state.items.length;
-    console.log(this.total)
+
   }
 
 render() {
@@ -23,52 +22,64 @@ render() {
         <div className="ui clearing segment">
         <form onSubmit={this.handleSubmit}>
         <div className="ui form">
-          <input onChange={this.handleChange} value={this.state.text} />
+          <input onChange={this.handleChangetext} value={this.state.text} placeholder="Task"/>
+          <input onChange={this.handleChangedescription} value={this.state.description} placeholder="Description"/>
           <button className="ui icon positive button right floated middle aligned"><i className="plus icon"></i></button>
         </div>  
         </form>
         </div>
-        <ul className="ui ordered list ">
-          {this.state.items.map(item => (
-            <li className="item" key={item.id} id={item.id-1}>
-              {item.text}
-              <form onSubmit={this.handleDelete}>
-                <button className="ui icon negative button right floated middle aligned">
-                  <i className="trash icon"></i>
-                </button>
-              </form>
-            </li>
+
+        <div className="ui middle aligned divided list">
+          {this.state.items.map((item,index) => (
+            <div className="item" key={item.id} id={item.id}>
+              <div className="right floated content">
+                <div className="ui negative button" onClick={this.handleDelete.bind(item,index)}><i className="trash icon"></i></div>
+              </div>
+              <div className="content">
+                <span className="task">{item.text}</span>
+                <span className="description">{item.description}</span>
+              </div>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
     );
   }
 
-  handleChange(e) {
+  handleChangetext(e) {
     this.setState({text: e.target.value});
+  }
+  handleChangedescription(e) {
+    this.setState({description: e.target.value});
   }
 
   handleSubmit(e) {
     e.preventDefault();
-
     if(this.state.text !== ""){
       var list = JSON.parse(localStorage.getItem('todos')) || [];
       var newItem = {
-        text: this.state.text,
-        id: this.state.items.length + 1
+        description: this.state.description,
+        text:        this.state.text,
+        id:          this.state.items.length + 1
       };
       list.push(newItem);
       localStorage.setItem('todos', JSON.stringify(list)); 
       this.setState((prevState) => ({
         items: prevState.items.concat(newItem),
-        text: ''
+        text: '',
+        description: ''
       }));
+      this.total += 1;
     }
   }
 
-  handleDelete(e) {
-    e.preventDefault();
-    console.log(this.state.items);
+  handleDelete(index,id) {
+    console.log(index)
+    // var list = JSON.parse(localStorage.getItem('todos'))
+    // for(var i = 0; i < list.length; i++){
+    //   console.log(list[i].id);
+    // }
+    
   }
 
   handleCheck(e) {
