@@ -11,7 +11,7 @@ class App extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.state = {items: JSON.parse(localStorage.getItem('todos')) || [], text: '', description: ''};
     this.total = this.state.items.length;
-
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
 render() {
@@ -31,9 +31,9 @@ render() {
 
         <div className="ui middle aligned divided list">
           {this.state.items.map((item,index) => (
-            <div className="item" key={item.id} id={item.id+1}>
+            <div className="item" key={item.id} id={item.id}>
               <div className="right floated content">
-                <div className="ui negative button" onClick={this.handleDelete.bind(item,index)}><i className="trash icon"></i></div>
+                <div className="ui negative button" onClick={this.handleDelete.bind(item,item.id)}><i className="trash icon"></i></div>
               </div>
               <div className="content">
                 <span className="task">{item.text}</span>
@@ -73,15 +73,17 @@ render() {
     }
   }
 
-  handleDelete(index,id) {
+  handleDelete(id,e) {
     var list = JSON.parse(localStorage.getItem('todos'))
-    for(var i = 0; i < list.length; i++){
-      if(list[i].id === (index+1)){
-        list.splice(i, 1)
-      }
-    }
-    localStorage.setItem('todos', JSON.stringify(list))
-
+    var index = list.map(function(d) { return d['id']; }).indexOf(id)
+    list.splice(index,1)
+    localStorage.setItem('todos', JSON.stringify(list));
+    this.setState((prevState) => ({
+      items: list,
+      text: '',
+      description: ''
+    }))
+    this.total -= 1;
   }
 
   handleCheck(e) {
