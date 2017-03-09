@@ -31,7 +31,7 @@ render() {
 
         <div className="ui middle aligned divided list">
           {this.state.items.map((item,index) => (
-            <div className="item" key={item.id} id={item.id}>
+            <div className="item" key={item.id} id={item.id+1}>
               <div className="right floated content">
                 <div className="ui negative button" onClick={this.handleDelete.bind(item,index)}><i className="trash icon"></i></div>
               </div>
@@ -74,12 +74,14 @@ render() {
   }
 
   handleDelete(index,id) {
-    console.log(index)
-    // var list = JSON.parse(localStorage.getItem('todos'))
-    // for(var i = 0; i < list.length; i++){
-    //   console.log(list[i].id);
-    // }
-    
+    var list = JSON.parse(localStorage.getItem('todos'))
+    for(var i = 0; i < list.length; i++){
+      if(list[i].id === (index+1)){
+        list.splice(i, 1)
+      }
+    }
+    localStorage.setItem('todos', JSON.stringify(list))
+
   }
 
   handleCheck(e) {
