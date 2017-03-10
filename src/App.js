@@ -9,9 +9,10 @@ class App extends Component {
     this.handleChangetext = this.handleChangetext.bind(this);
     this.handleChangedescription = this.handleChangedescription.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleCheck = this.handleCheck.bind(this);
     this.state = {items: JSON.parse(localStorage.getItem('todos')) || [], text: '', description: ''};
     this.total = this.state.items.length;
-    this.handleDelete = this.handleDelete.bind(this);
   }
 
 render() {
@@ -32,11 +33,15 @@ render() {
         <div className="ui middle aligned divided list">
           {this.state.items.map((item,index) => (
             <div className="item" key={item.id} id={item.id}>
+              <div className="left floated content">
+                <div className="ui basic circular button" onClick={this.handleCheck.bind(item,item.id)}><i className="checkmark icon"></i></div>
+              </div>
               <div className="right floated content">
                 <div className="ui negative button" onClick={this.handleDelete.bind(item,item.id)}><i className="trash icon"></i></div>
               </div>
               <div className="content">
-                <span className="task">{item.text}</span>
+                { item.checkComplete ? <span className="task complete">{item.text}</span> : <span className="task notcomplete">{item.text}</span>}
+                
                 <span className="description">{item.description}</span>
               </div>
             </div>
@@ -60,7 +65,8 @@ render() {
       var newItem = {
         description: this.state.description,
         text:        this.state.text,
-        id:          this.state.items.length + 1
+        id:          this.state.items.length + 1,
+        checkComplete: false
       };
       list.push(newItem);
       localStorage.setItem('todos', JSON.stringify(list)); 
@@ -86,9 +92,23 @@ render() {
     this.total -= 1;
   }
 
-  handleCheck(e) {
-    e.preventDefault();
-    console.log(this.state.items);
+  handleCheck(id,e) {
+    var list = JSON.parse(localStorage.getItem('todos'))
+    var index = list.map(function(d) { return d['id']; }).indexOf(id)
+    if(list[index].checkComplete === false){
+      list[index].checkComplete = true
+      this.setState({showHideSidenav:'complete'});
+    }
+    else{
+      list[index].checkComplete = false
+      this.setState({showHideSidenav:'notcomplete'});
+    }
+    localStorage.setItem('todos', JSON.stringify(list));
+    this.setState((prevState) => ({
+      items: list,
+      text: '',
+      description: ''
+    }))
   }
 }
 

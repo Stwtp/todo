@@ -30,8 +30,17 @@
   font-weight: 600;
   font-size: 12px;
 }
-.trash {
+
+.trash,.checkmark {
   margin: 0 !important;
+}
+
+.complete {
+   text-decoration: line-through;
+}
+
+.notcomplete{
+   text-decoration: none;
 }
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
