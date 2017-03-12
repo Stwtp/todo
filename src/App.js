@@ -167,6 +167,8 @@ render() {
       text: '',
       description: ''
     }))
+    this.totalComplete = this.countComplete();
+    this.totalIncomplete = this.countIncomplete();
     this.total -= 1;
   }
 
@@ -195,7 +197,7 @@ render() {
     var list = JSON.parse(localStorage.getItem('todos'))
     var index = list.map(function(d) { return d['id']; }).indexOf(id)
     var text = prompt("change text")
-    var description = prompt("change text")
+    var description = prompt("change description")
     if(text !== '' && text !== null)
       list[index].text = text
     if(description !== ''  && description !== null)
